@@ -106,3 +106,9 @@ dist
 
 # Local data
 data
+
+# Lambda env vars
+dev.json
+prod.json
+
+claudia.json
