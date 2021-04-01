@@ -4,6 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "create": "claudia create --api-module index --region eu-central-1 --version dev",
+    "update": "claudia update --version dev",
+    "set-production": "claudia set-version --version production",
+    "reassign-dev": "claudia set-version --version dev",
+    "load-from-json": "claudia set-version --version dev --set-env-from-json dev.json",
+    "load-prod-from-json": "claudia set-version --version production --set-env-from-json prod.json",
+    "check-dev": "claudia test-lambda --version dev",
+    "check-production": "claudia test-lambda --version production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
