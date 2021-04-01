@@ -11,6 +11,8 @@ var api = new ApiBuilder(),
     database: process.env.RDS_DB,
   });
 
+api.corsOrigin("*");
+
 /**
  * Hello page
  */
@@ -31,17 +33,79 @@ api.get(
 /**
  * Insert score
  */
-api.get(
+api.post(
   "/score/{name}",
   function (request) {
     "use strict";
 
-    var projectSql = SqlString.format('SELECT * FROM projects WHERE name = ?', [request.pathParams.name]);
+    const projectSql = SqlString.format(
+      "SELECT id, encryption_key FROM projects WHERE name = ?",
+      [request.pathParams.name]
+    );
+    const project = connection.query(projectSql);
 
-    return connection.query(projectSql);
+    if (project.length !== 1 || !request.body.data) {
+      throw new Error("Not found");
+    }
+
+    const encryptionKey = project[0].encryption_key;
+    const id = project[0].id;
+    const decryptedData = CryptoJS.AES.decrypt(
+      request.body.data,
+      encryptionKey
+    ).toString(CryptoJS.enc.Utf8);
+
+    if (decryptedData.length === 0) {
+      throw new Error("Unable to decrypt data");
+    }
+
+    const score = JSON.parse(decryptedData);
+    const date = new Date().toISOString().slice(0, 19).replace("T", " ");
+    const insertSql = SqlString.format(
+      "INSERT INTO highscores (project_id, nickname, score, source, created_at) VALUES (?, ?, ?, ?, ?)",
+      [id, score.nickname, score.score, score.source, date]
+    );
+
+    connection.query(insertSql);
+
+    return { status: "OK" };
   },
   {
     success: { code: 200, contentType: "application/json" },
+    error: { code: 404, contentType: "application/json" },
+  }
+);
+
+/**
+ * Get scores
+ */
+api.get(
+  "/score/{name}/{number}",
+  function (request) {
+    "use strict";
+
+    const projectSql = SqlString.format(
+      "SELECT id FROM projects WHERE name = ?",
+      [request.pathParams.name]
+    );
+    const project = connection.query(projectSql);
+
+    if (project.length !== 1) {
+      throw new Error("Not found");
+    }
+
+    const id = project[0].id;
+
+    const scoresSql = SqlString.format(
+      "SELECT nickname, score FROM highscores WHERE project_id = ? ORDER BY score DESC LIMIT ?",
+      [id, Number(request.pathParams.number)]
+    );
+
+    return connection.query(scoresSql);
+  },
+  {
+    success: { code: 200, contentType: "application/json" },
+    error: { code: 404, contentType: "application/json" },
   }
 );
 
