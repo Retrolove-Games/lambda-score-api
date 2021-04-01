@@ -1,0 +1,25 @@
+{
+  "name": "lambda-score-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Retrolove-Games/lambda-score-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Retrolove-Games/lambda-score-api/issues"
+  },
+  "homepage": "https://github.com/Retrolove-Games/lambda-score-api#readme",
+  "dependencies": {
+    "aws-sdk": "^2.877.0",
+    "claudia-api-builder": "^4.1.2",
+    "sync-mysql": "^3.0.1"
+  }
+}
