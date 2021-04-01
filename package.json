@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "create": "claudia create --api-module index --region eu-central-1 --version dev",
-    "update": "claudia update --version dev",
+    "update": "claudia update --version production",
     "set-production": "claudia set-version --version production",
     "reassign-dev": "claudia set-version --version dev",
     "load-from-json": "claudia set-version --version dev --set-env-from-json dev.json",
@@ -28,6 +28,7 @@
   "dependencies": {
     "claudia-api-builder": "^4.1.2",
     "crypto-js": "^4.0.0",
+    "sqlstring": "^2.3.1",
     "sync-mysql": "^3.0.1"
   }
 }
