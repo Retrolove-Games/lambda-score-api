@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/Retrolove-Games/lambda-score-api#readme",
   "dependencies": {
-    "aws-sdk": "^2.877.0",
     "claudia-api-builder": "^4.1.2",
     "sync-mysql": "^3.0.1"
   }
